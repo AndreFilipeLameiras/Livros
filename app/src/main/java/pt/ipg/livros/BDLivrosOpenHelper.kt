@@ -13,10 +13,12 @@ class BDLivrosOpenHelper(
 
 
     override fun onCreate(db: SQLiteDatabase?) {
-        requiredNotNull(db)
+        requireNotNull(db)
 
         TabelaBDCategorias(db).cria()
         TabelaDBLivros(db).cria()
+
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase? , p1: Int, p2: Int) {
