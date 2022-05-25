@@ -17,5 +17,8 @@ abstract class TabelaBD (val db:SQLiteDatabase, val nome: String) {
         db.delete(nome, whereClause, whereArgs)
 
 
-    fun query(columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String) = db.query(nome, columns, selection, selectionArgs, groupBy, having, orderBy)
+    fun query(columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String) =
+        db.query(nome, columns, selection, selectionArgs, groupBy, having, orderBy)
+
+
 }
