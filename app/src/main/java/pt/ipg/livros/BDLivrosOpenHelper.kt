@@ -24,7 +24,7 @@ class BDLivrosOpenHelper(
 
 
     companion object{
-        private const val NOME = "livros.db"
+        const val NOME = "livros.db"
         private const val VERSAO = 1
     }
 
