@@ -104,5 +104,34 @@ class BaseDadosTest {
     }
 
 
+    @Test
+    fun consegueAlterarLivros(){
+        val db = getWritableDatabase()
+
+        val categoriaSuspense = Categoria("Suspense")
+        insereCategoria(db, categoriaSuspense)
+
+        val categoriaMisterio = Categoria("Misterio")
+        insereCategoria(db, categoriaMisterio)
+
+        val livro = Livro("TESTE", "TESTE", categoriaSuspense.id)
+        insereLivro(db,livro)
+
+        livro.titulo = "A rapariga no comboio"
+        livro.autor = "Paula Hawkins"
+        livro.cateforiaId = categoriaMisterio.id
+
+        val registosAlterados = TabelaBDCategorias(db).update(
+            categoriaMisterio.toContentValues(),
+            "${BaseColumns._ID}=?",
+            arrayOf("$categoriaMisterio.id")
+        )
+
+        assertNotEquals(1, registosAlterados)
+
+
+        db.close()
+    }
+
 
 }
