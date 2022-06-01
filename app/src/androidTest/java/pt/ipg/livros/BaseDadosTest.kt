@@ -1,6 +1,7 @@
 package pt.ipg.livros
 
 import android.database.sqlite.SQLiteDatabase
+import android.provider.BaseColumns
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -30,10 +31,10 @@ class BaseDadosTest {
         assertNotEquals(-1, categoria.id)
     }
 
-    private fun insereLivro(db: SQLiteDatabase, livros: Livros){
-        TabelaDBLivros(db).insert(livros.toContentValues())
+    private fun insereLivro(db: SQLiteDatabase, livro: Livro){
+        TabelaDBLivros(db).insert(livro.toContentValues())
 
-        assertNotEquals(-1, livros.id)
+        assertNotEquals(-1, livro.id)
     }
 
 
@@ -73,13 +74,34 @@ class BaseDadosTest {
         val categoria = Categoria("Drama")
         insereCategoria(db, categoria)
 
-        val livro = Livros("O Leao que temos ca dentro", "Rachel Bright", categoria.id)
+        val livro = Livro("O Leao que temos ca dentro", "Rachel Bright", categoria.id)
 
         insereLivro(db,livro)
 
         db.close()
     }
 
+
+    @Test
+    fun consegueAlterarCategoria(){
+        val db = getWritableDatabase()
+
+        val categoria = Categoria("TESTE")
+        insereCategoria(db, categoria)
+
+
+        categoria.nome = "Ficçao Cientifica"
+        val registosAlterados = TabelaBDCategorias(db).update(
+            categoria.toContentValues(),
+            "${BaseColumns._ID}=?",
+            arrayOf("$categoria.id")
+            )
+
+        assertNotEquals(1, registosAlterados)
+
+
+        db.close()
+    }
 
 
 
