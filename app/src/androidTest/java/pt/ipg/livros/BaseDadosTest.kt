@@ -32,4 +32,18 @@ class BaseDadosTest {
 
         db.close()
     }
+
+    @Test
+    fun consegueInserirCategorias(){
+        val openHelper = BDLivrosOpenHelper(appContext())
+        val db = openHelper.writableDatabase
+
+
+        val categoria = Categoria("Drama")
+        categoria.id = TabelaBDCategorias(db).insert(categoria.toContentValues())
+
+        assertNotEquals(-1, categoria.id)
+        db.close()
+
+    }
 }
