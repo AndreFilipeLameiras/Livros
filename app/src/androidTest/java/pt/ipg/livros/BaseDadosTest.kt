@@ -1,5 +1,6 @@
 package pt.ipg.livros
 
+import android.database.sqlite.SQLiteDatabase
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -16,7 +17,25 @@ import org.junit.Before
  */
 @RunWith(AndroidJUnit4::class)
 class BaseDadosTest {
-    fun appContext() = InstrumentationRegistry.getInstrumentation().targetContext
+    private fun appContext() = InstrumentationRegistry.getInstrumentation().targetContext
+
+    private fun getWritableDatabase(): SQLiteDatabase? {
+        val openHelper = BDLivrosOpenHelper(appContext())
+        return openHelper.writableDatabase
+
+    }
+    private fun insereCategoria(db: SQLiteDatabase?, categoria: Categoria) {
+        categoria.id = TabelaBDCategorias(db).insert(categoria.toContentValues())
+
+        assertNotEquals(-1, categoria.id)
+    }
+
+    private fun insereLivro(db: SQLiteDatabase, livros: Livros){
+        TabelaDBLivros(db).insert(livros.toContentValues())
+
+        assertNotEquals(-1, livros.id)
+    }
+
 
     @Before
     fun apagaBaseDados() {
@@ -35,15 +54,33 @@ class BaseDadosTest {
 
     @Test
     fun consegueInserirCategorias(){
-        val openHelper = BDLivrosOpenHelper(appContext())
-        val db = openHelper.writableDatabase
+        val db = getWritableDatabase()
+
+        insereCategoria(db, Categoria("Drama"))
 
 
-        val categoria = Categoria("Drama")
-        categoria.id = TabelaBDCategorias(db).insert(categoria.toContentValues())
-
-        assertNotEquals(-1, categoria.id)
         db.close()
 
     }
+
+
+
+
+    @Test
+    fun consegueInserirLivros(){
+        val db = getWritableDatabase()
+
+        val categoria = Categoria("Drama")
+        insereCategoria(db, categoria)
+
+        val livro = Livros("O Leao que temos ca dentro", "Rachel Bright", categoria.id)
+
+        insereLivro(db,livro)
+
+        db.close()
+    }
+
+
+
+
 }
